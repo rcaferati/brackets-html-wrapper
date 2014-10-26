@@ -1,0 +1,28 @@
+{
+    "name": "brackets-htmlwrapper",
+    "title": "HTML Wrapper",
+    "version": "0.1.0",
+    "description": "Format ul, ol, nav and select children tags with a single command.",
+    "homepage": "https://github.com/rcaferati/brackets-htmlwrapper",
+    "author": "Rafael Caferati talkto@caferati.me (https://github.com/rcaferati/)",
+    "license": "MIT",
+    "categories":"formatting",
+    "keywords": [
+        "format",
+        "formatting",
+        "wrapper",
+        "html",
+        "li",
+        "list",
+        "html wrapper",
+        "li wrapper",
+        "option wrapper",
+        "list wrapper"
+    ],
+    "files": [
+        "main.js"
+    ],
+    "engines": {
+        "brackets": ">=0.30.0"
+    }
+}
