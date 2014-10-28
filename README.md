@@ -1,7 +1,7 @@
 Brackets HTML Wrapper
 ====================
 
-HTML Wrapper is a Brackets Extension that formats &lt;ul&gt;, &lt;ol&gt;, &lt;nav&gt; and &lt;select&gt; children tags with a single command.
+HTML Wrapper is a Brackets Extension that formats &lt;ul&gt;, &lt;ol&gt;, &lt;nav&gt;, &lt;tr&gt; and &lt;select&gt; children tags with a single command.
 
 ## Installation ##
 
@@ -23,6 +23,9 @@ HTML Wrapper is a Brackets Extension that formats &lt;ul&gt;, &lt;ol&gt;, &lt;na
 ----------------
 
 ## Changelog ##
+
+###0.1.1
+- Added suport for &lt;tr&gt;
 
 ###0.1.0
 - Initial release

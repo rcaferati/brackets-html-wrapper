@@ -42,7 +42,7 @@ define(function(require, exports, module) {
         
         if(!selectedText.length>0) return false;
         
-        prev.replace(/(.*)<(select|ul|ol|nav)([^>]*)(>$)/ig,function(a,b,c,d){
+        prev.replace(/(.*)<(select|ul|ol|nav|tr)([^>]*)(>$)/ig,function(a,b,c,d){
             if(c){
                 opened = c;
             }
@@ -52,7 +52,7 @@ define(function(require, exports, module) {
                 closed = c;
             }
         });
-        if((opened && opened.match(/^(select|ul|ol|nav)$/i)) || (closed && closed.match(/^(option|li|a)$/i))){
+        if((opened && opened.match(/^(select|ul|ol|nav|tr)$/i)) || (closed && closed.match(/^(option|li|a|td)$/i))){
             tag = opened || closed;
         } else{
             tag = "";

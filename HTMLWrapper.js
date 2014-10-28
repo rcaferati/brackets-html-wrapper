@@ -25,6 +25,11 @@ define(function(require, exports, module) {
                 tag = "li";
                 close = tag;
                 break;
+            case "td" :
+            case "tr" :
+                tag = "td";
+                close = tag;
+                break;
             case "nav":
             case "a":
                 tag = "a href='/'";
