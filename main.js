@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
-    
+
     "use strict";
-    
+
     var AppInit = brackets.getModule("utils/AppInit"),
         CommandManager    = brackets.getModule('command/CommandManager'),
         KeyBindingManager = brackets.getModule('command/KeyBindingManager'),
@@ -14,8 +14,9 @@ define(function(require, exports, module) {
         codeMirror,
         HTMLWrapper = require('HTMLWrapper'),
         CONTEXTUAL_COMMAND_ID = "caferati.htmlwrapper";
-    
+
     function getSpace(selection, text){
+        return;
         var ws = 0;
         text.replace(/^([\t\s]*)(.*)/ig,function(a,b,c,d){
             ws += b.length;
@@ -26,8 +27,9 @@ define(function(require, exports, module) {
             all: ws
         }
     }
-    
+
     function wrapp(){
+        return;
         var editor = EditorManager.getCurrentFullEditor(),
             selectedText = editor.getSelectedText(),
             selection = editor.getSelection(),
@@ -40,9 +42,9 @@ define(function(require, exports, module) {
             text,
             extra,
             tag;
-        
+
         if(!selectedText.length>0) return false;
-        
+
         prev.replace(/(.*)<(select|ul|ol|nav|tr)([^>]*)(>$)/ig,function(a,b,c,d){
             if(c){
                 opened = c;
@@ -68,18 +70,22 @@ define(function(require, exports, module) {
         }
         return true;
     }
-    
+
     function check(){
-        var doc = DocumentManager.getCurrentDocument(),
-            language = doc.getLanguage(),
-            fileType = language._id,
-            contextMenu = Menus.getContextMenu(Menus.ContextMenuIds.EDITOR_MENU);
-        fileType.match(/html|php|aspx|xhtml/i) ? contextMenu.addMenuItem(CONTEXTUAL_COMMAND_ID) : contextMenu.removeMenuItem(CONTEXTUAL_COMMAND_ID);
+
+        var doc = DocumentManager.getCurrentDocument();
+        if(doc){
+            var language = doc.getLanguage(),
+                fileType = language._id,
+                contextMenu = Menus.getContextMenu(Menus.ContextMenuIds.EDITOR_MENU);
+            fileType.match(/html|php|aspx|xhtml/i) ? contextMenu.addMenuItem(CONTEXTUAL_COMMAND_ID) : contextMenu.removeMenuItem(CONTEXTUAL_COMMAND_ID);            
+        }
     }
-    
+
     CommandManager.register("HTML Wrapper", CONTEXTUAL_COMMAND_ID, wrapp);
-    
+
     var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
+
     var command = [{
         key: "Ctrl-Shift-E",
         platform: "win"
@@ -89,10 +95,11 @@ define(function(require, exports, module) {
     }];
     menu.addMenuDivider();
     menu.addMenuItem(CONTEXTUAL_COMMAND_ID, command);    
-    
-    
+
     $(EditorManager).on("activeEditorChange", function(){
         check();
     });
-    
+
+
+
 });
