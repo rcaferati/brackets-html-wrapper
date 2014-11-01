@@ -4,7 +4,7 @@
     "version": "0.1.4",
     "description": "Format <ul>, <ol>, <nav>, <select> and <tr> children tags with a single command.",
     "homepage": "https://github.com/rcaferati/brackets-html-wrapper",
-    "author": "(https://github.com/rcaferati/)",
+    "author": "rcaferati (https://github.com/rcaferati/)",
     "license": "MIT",
     "categories": "formatting",
     "keywords": [
