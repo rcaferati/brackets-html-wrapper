@@ -38,6 +38,7 @@ define(function(require, exports, module) {
             opened,
             closed,
             text,
+            extra,
             tag;
         
         if(!selectedText.length>0) return false;
@@ -47,21 +48,24 @@ define(function(require, exports, module) {
                 opened = c;
             }
         });
-        prev.replace(/(.*)<\/?([a-z]+)([^>]*)(>)$/ig,function(a,b,c,d){
+        prev.replace(/(.*)<\/?([a-z]+)([^>]*)(>)$/ig,function(a,b,c){
             if(c){
+                var reg = new RegExp("(.*)(<"+c+")([^>]*)(>)(.*)<\/?([a-z]+)([^>]*)(>)$","ig");
+                prev.replace(reg, function(a,b,c,d){
+                    extra = d || null;
+                })
                 closed = c;
             }
         });
-        if((opened && opened.match(/^(select|ul|ol|nav|tr)$/i)) || (closed && closed.match(/^(option|li|a|td)$/i))){
-            tag = opened || closed;
-        } else{
-            tag = "";
+        tag = ((opened && opened.match(/^(select|ul|ol|nav|tr)$/i)) || (closed && closed.match(/^(option|li|a|td|div|span|strong)$/i))) ? opened || closed : null;
+        if(tag){
+            text = HTMLWrapper.wrapp(selectedText,{
+                tag:tag,
+                space: getSpace(selection,selectedText),
+                extra: extra
+            });
+            doc.replaceRange(text, selection.start, selection.end);
         }
-        text = HTMLWrapper.wrapp(selectedText,{
-            tag:tag,
-            space: getSpace(selection,selectedText)
-        });        
-        doc.replaceRange(text, selection.start, selection.end);
         return true;
     }
     

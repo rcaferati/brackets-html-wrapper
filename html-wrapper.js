@@ -10,34 +10,31 @@ define(function(require, exports, module) {
         return x;
     }
 
-    function innerTags(text, tag){
+    function innerTags(text, tag, extra){
         var lines = text.split(/\n|\r/mig),
             close = tag;
         switch(tag){
             case "select" : 
-            case "option" :
-                tag = "option value=''";
+                extra = extra || " value=''";
                 close = "option";
                 break;
             case "ul" : 
             case "ol" :
-            case "li" :                
                 tag = "li";
                 close = tag;
                 break;
-            case "td" :
             case "tr" :
                 tag = "td";
                 close = tag;
                 break;
             case "nav":
             case "a":
-                tag = "a href='/'";
+                extra = extra || " href=''";
                 close = "a";
                 break;
-            default : 
-                tag = "li";
-                close = "li";
+        }
+        if(extra){
+            tag+=extra;
         }
         if(lines.length>0){
             for(var i  in lines){
@@ -68,7 +65,7 @@ define(function(require, exports, module) {
         if(text.length>0){
             space.first = setSpace(params.space.first);
             space.all = setSpace(params.space.all);
-            var r = innerTags(text, params.tag);
+            var r = innerTags(text, params.tag, params.extra);
             if(!params.tag){
                 r = outerTag(r, "ul");
             }
