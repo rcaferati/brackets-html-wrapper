@@ -12,7 +12,7 @@ define(function(require, exports, module) {
         PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
         editor,
         codeMirror,
-        HTMLWrapper = require('HTMLWrapper'),
+        HTMLWrapper = require('html-wrapper'),
         CONTEXTUAL_COMMAND_ID = "caferati.htmlwrapper";
 
     function getSpace(selection, text){
