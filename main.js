@@ -16,7 +16,6 @@ define(function(require, exports, module) {
         CONTEXTUAL_COMMAND_ID = "caferati.htmlwrapper";
 
     function getSpace(selection, text){
-        return;
         var ws = 0;
         text.replace(/^([\t\s]*)(.*)/ig,function(a,b,c,d){
             ws += b.length;
@@ -29,7 +28,6 @@ define(function(require, exports, module) {
     }
 
     function wrapp(){
-        return;
         var editor = EditorManager.getCurrentFullEditor(),
             selectedText = editor.getSelectedText(),
             selection = editor.getSelection(),
@@ -72,7 +70,6 @@ define(function(require, exports, module) {
     }
 
     function check(){
-
         var doc = DocumentManager.getCurrentDocument();
         if(doc){
             var language = doc.getLanguage(),
