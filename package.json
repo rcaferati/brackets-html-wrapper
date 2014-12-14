@@ -20,6 +20,6 @@
         "main.js"
     ],
     "engines": {
-        "brackets": ">=0.30.0"
+        "brackets": ">=0.22.0"
     }
 }
