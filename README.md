@@ -19,10 +19,12 @@ HTML Wrapper is a Brackets Extension that formats &lt;ul&gt;, &lt;ol&gt;, &lt;na
 1. Select a clean list of itens separated by a carriage return
 2. Right click on the selection and click on the "HTML Wrapper" option
 3. Or use the shortcut CMD/CTRL+SHIFT+E
-
 ----------------
 
 ## Changelog ##
+
+###1.0.0
+- Added advanced options
 
 ###0.1.3
 - Added multiple tags support

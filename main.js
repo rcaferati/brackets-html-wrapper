@@ -1,81 +1,105 @@
-define(function(require, exports, module) {
+define(function (require, exports, module) {
 
     "use strict";
 
-    var AppInit = brackets.getModule("utils/AppInit"),
-        CommandManager    = brackets.getModule('command/CommandManager'),
-        KeyBindingManager = brackets.getModule('command/KeyBindingManager'),
-        Menus             = brackets.getModule('command/Menus'),
-        EditorManager     = brackets.getModule('editor/EditorManager'),
-        Dialogs           = brackets.getModule("widgets/Dialogs"),
-        DocumentManager   = brackets.getModule("document/DocumentManager"),
+    var CommandManager = brackets.getModule('command/CommandManager'),
+        Menus = brackets.getModule('command/Menus'),
+        EditorManager = brackets.getModule('editor/EditorManager'),
+        DocumentManager = brackets.getModule("document/DocumentManager"),
         PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
         editor,
         codeMirror,
         HTMLWrapper = require('html-wrapper'),
         CONTEXTUAL_COMMAND_ID = "caferati.htmlwrapper";
 
-    function getSpace(selection, text){
+    function getSpace(selection, text) {
         var ws = 0;
-        text.replace(/^([\t\s]*)(.*)/ig,function(a,b,c,d){
+        text.replace(/^([\t\s]*)(.*)/ig, function (a, b, c, d) {
             ws += b.length;
         });
         ws += selection.start.ch;
-        return{
+        return {
             first: ws - selection.start.ch,
             all: ws
         }
     }
 
-    function wrapp(){
+    function getLastLine(text) {
+        var match = text.match(/([^\n\r]+)$/ig);
+        if (match.length == 1) {
+            return match[0];
+        }
+        return "";
+    }
+
+
+    function getLineDif(text1, text2) {
+        var dif = getLastLine(text2).length - getLastLine(text1).length;
+        return dif;
+
+    }
+
+    function wrapp() {
         var editor = EditorManager.getCurrentFullEditor(),
             selectedText = editor.getSelectedText(),
             selection = editor.getSelection(),
             doc = DocumentManager.getCurrentDocument(),
             language = doc.getLanguage(),
             fileType = language._id,
-            prev = doc.getRange({line:0,ch:0},selection.start).trim() || "",
+            prev = doc.getRange({
+                line: 0,
+                ch: 0
+            }, selection.start).trim() || "",
             opened,
             closed,
             text,
             extra,
             tag;
 
-        if(!selectedText.length>0) return false;
+        console.log("WRAPP_START");
+        if (!selectedText.length > 0) return false;
 
-        prev.replace(/(.*)<(select|ul|ol|nav|tr)([^>]*)(>$)/ig,function(a,b,c,d){
-            if(c){
+        prev.replace(/(.*)<(select|ul|ol|nav|tr)([^>]*)(>$)/ig, function (a, b, c, d) {
+            if (c) {
                 opened = c;
             }
         });
-        prev.replace(/(.*)<\/?([a-z]+)([^>]*)(>)$/ig,function(a,b,c){
-            if(c){
-                var reg = new RegExp("(.*)(<"+c+")([^>]*)(>)(.*)<\/?([a-z]+)([^>]*)(>)$","ig");
-                prev.replace(reg, function(a,b,c,d){
+        prev.replace(/(.*)<\/?([a-z]+)([^>]*)(>)$/ig, function (a, b, c) {
+            if (c) {
+                var reg = new RegExp("(.*)(<" + c + ")([^>]*)(>)(.*)<\/?([a-z]+)([^>]*)(>)$", "ig");
+                prev.replace(reg, function (a, b, c, d) {
                     extra = d || null;
                 })
                 closed = c;
             }
         });
+
         tag = ((opened && opened.match(/^(select|ul|ol|nav|tr)$/i)) || (closed && closed.match(/^(option|li|a|td|div|span|strong)$/i))) ? opened || closed : null;
-        if(tag){
-            text = HTMLWrapper.wrapp(selectedText,{
-                tag:tag,
-                space: getSpace(selection,selectedText),
+        if (tag) {
+            text = HTMLWrapper.wrapp(selectedText, {
+                tag: tag,
+                space: getSpace(selection, selectedText),
                 extra: extra
             });
-            doc.replaceRange(text, selection.start, selection.end);
+            codeMirror = editor._codeMirror;
+            codeMirror.replaceRange(text, selection.start, selection.end);
+            codeMirror.setSelection(selection.start, {
+                ch: selection.end.ch + getLineDif(selectedText, text),
+                line: selection.end.line
+            });
+
         }
+        console.log("WRAPP_END");
         return true;
     }
 
-    function check(){
+    function check() {
         var doc = DocumentManager.getCurrentDocument();
-        if(doc){
+        if (doc) {
             var language = doc.getLanguage(),
                 fileType = language._id,
                 contextMenu = Menus.getContextMenu(Menus.ContextMenuIds.EDITOR_MENU);
-            fileType.match(/html|php|aspx|xhtml/i) ? contextMenu.addMenuItem(CONTEXTUAL_COMMAND_ID) : contextMenu.removeMenuItem(CONTEXTUAL_COMMAND_ID);            
+            fileType.match(/html|php|aspx|xhtml/i) ? contextMenu.addMenuItem(CONTEXTUAL_COMMAND_ID) : contextMenu.removeMenuItem(CONTEXTUAL_COMMAND_ID);
         }
     }
 
@@ -91,9 +115,9 @@ define(function(require, exports, module) {
         platform: "mac"
     }];
     menu.addMenuDivider();
-    menu.addMenuItem(CONTEXTUAL_COMMAND_ID, command);    
+    menu.addMenuItem(CONTEXTUAL_COMMAND_ID, command);
 
-    $(EditorManager).on("activeEditorChange", function(){
+    $(EditorManager).on("activeEditorChange", function () {
         check();
     });
 

@@ -1,89 +1,138 @@
-define(function(require, exports, module) {
+define(function (require, exports, module) {
 
     var space = {
-        first:"",
-        all:""
+        first: "",
+        all: ""
     };
 
-    function setSlug(str){
+    function stripTags(str) {
+        return str.replace(/(<([^>]+)>)/ig, "");
+    }
+
+    function setSlug(str) {
         var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;",
-            to   = "aaaaaeeeeeiiiiooooouuuunc------";
+            to = "aaaaaeeeeeiiiiooooouuuunc------";
         str = str.replace(/^\s+|\s+$/g, '').toLowerCase();
-        for (var i=0, l=from.length ; i<l ; i++) {
+        for (var i = 0, l = from.length; i < l; i++) {
             str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
         }
         return str.replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
     }
 
-    function replaceSlug(tag, url){
-        if(tag.match(/href/)){
-            tag = tag.replace(/(.*)?(href)([\s]+)?(\=)(["']{1})?([^"'\s]+)?(.*)/,"$1$2$3$4$5$6/" + setSlug(url) + "$7");
+    function replaceSlug(tag, url) {
+        if (tag.match(/href/)) {
+            tag = tag.replace(/(.*)?(href)([\s]+)?(\=)(["']{1})?([^"'\s]+)?(.*)/, "$1$2$3$4$5$6/" + setSlug(url) + "$7");
         }
         return tag;
     }
 
-    function outerTag(text, tag){
-        var x = "<"+tag+">\n"+text+"\n</"+tag+">";
+    function replaceValue(tag, url) {
+        if (tag.match(/value/)) {
+            tag = tag.replace(/(.*)?(value)([\s]+)?(\=)(["']{1})?([^"'\s]+)?(.*)/, "$1$2$3$4$5$6" + url.trim() + "$7");
+        }
+        return tag;
+    }
+
+    function outerTag(text, tag) {
+        var x = "<" + tag + ">\n" + text + "\n</" + tag + ">";
         return x;
     }
 
-    function innerTags(text, tag, extra){
-        var lines = text.split(/\n|\r/mig),
-            close = tag;
-        switch(tag){
-            case "select" : 
-                extra = extra || " value=''";
-                tag = close = "option";
-                break;
-            case "ul" : 
-            case "ol" :
-                tag = "li";
-                close = tag;
-                break;
-            case "tr" :
-                tag = "td";
-                close = tag;
-                break;
-            case "nav":
-            case "a":
-                extra = extra || " href=''";
-                tag = close = "a";
-                break;
-        }
-        if(extra)
-            tag+=extra;
-
-        if(lines.length>0){
-            for(var i  in lines){
-                lines[i] = ( i>0 ? space.all : space.first) + "<" + (tag.match(/^a\s?/i) ? replaceSlug(tag, lines[i]) : tag) + ">"+lines[i].trim()+"</"+close+">";
+    function create(lines, tag, close) {
+        if (lines.length > 0) {
+            for (var i in lines) {
+                lines[i] = (i > 0 ? space.all : space.first) + "<" + (tag.match(/^a\s?/i) ? replaceSlug(tag, lines[i]) : tag.match(/^option\s?/i) ? replaceValue(tag, lines[i]) : tag) + ">" + lines[i].trim() + "</" + close + ">";
             }
             return lines.join("\n");
+        }
+    }
+
+    function replace(lines, tag, close) {
+        var str;
+        if (lines.length > 0 && tag.match(/^(select|option|nav|a)$/ig)) {
+            if (lines[0].match(/(.*)(value|href)(\=)(["']{2})(.*)/ig)) {
+                for (var i in lines) {
+                    lines[i] = lines[i].replace(/(.*)(value|href)(\=)(["']{2})(.*)/ig, "$1$2$3'" + (tag.match(/^(nav|a)$/ig) ? "/" + setSlug(stripTags(lines[i])) : stripTags(lines[i])).trim() + "'$5");
+                }
+            } else {
+                switch (tag) {
+                    case "select":
+                    case "option":
+                        for (var i in lines) {
+                            str = lines[i].match(/(.*)(value)(\=)(["']{1})?([0-9]+)(["']{1})?(.*)/ig) ? "" : i;
+                            lines[i] = lines[i].replace(/(.*)(value)(\=)(["']{1})?([^"']+)?(.*)/ig, "$1$2$3$4" + str + "$6");
+                        }
+                        break;
+                    case "nav":
+                    case "a":
+                        for (var i in lines) {
+                            lines[i] = lines[i].replace(/(.*)(value|href)(\=)(["']{1})?([^"'\s]+)?(.*)/ig, "$1$2$3$4$6");
+                        }
+                        break;
+                }
+            }
+        }
+        return lines.join("\n");
+    }
+
+    function innerTags(text, tag, extra) {
+        var lines = text.split(/\n|\r/mig),
+            close = tag;
+        switch (tag) {
+        case "select":
+            extra = extra || " value=''";
+            tag = close = "option";
+            break;
+        case "ul":
+        case "ol":
+            tag = "li";
+            close = tag;
+            break;
+        case "tr":
+            tag = "td";
+            close = tag;
+            break;
+        case "nav":
+        case "a":
+            extra = extra || " href=''";
+            tag = close = "a";
+            break;
+        }
+
+        var has = text.match(new RegExp("^([\\s]*\<)" + tag + "(\\s|>)", "ig")) ? 1 : 0;
+
+        if (has) {
+            return replace(lines, tag, close);
+        } else {
+            if (extra)
+                tag += extra;
+            return create(lines, tag, close);
         }
         return "";
     }
 
-    function setSpace(length){
+    function setSpace(length) {
         length = length || 0;
         var space = "",
             i;
-        if(length>0){
-            for(i=0; i<length%4; i++){
-                space+=" ";
-            }            
-            for(i=0; i<Math.floor(length/4); i++){
-                space+="\t";
+        if (length > 0) {
+            for (i = 0; i < length % 4; i++) {
+                space += " ";
+            }
+            for (i = 0; i < Math.floor(length / 4); i++) {
+                space += "\t";
             }
         }
         return space;
     }
 
-    function wrapp(text, params){
+    function wrapp(text, params) {
         params = params || {};
-        if(text.length>0){
+        if (text.length > 0) {
             space.first = setSpace(params.space.first);
             space.all = setSpace(params.space.all);
             var r = innerTags(text, params.tag, params.extra);
-            if(!params.tag){
+            if (!params.tag) {
                 r = outerTag(r, "ul");
             }
             return r;
@@ -92,5 +141,5 @@ define(function(require, exports, module) {
 
     return {
         wrapp: wrapp
-    };    
+    };
 });

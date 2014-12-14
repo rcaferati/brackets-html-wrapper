@@ -1,8 +1,8 @@
 {
     "name": "brackets-html-wrapper",
     "title": "HTML Wrapper",
-    "version": "0.2.1",
-    "description": "Format <ul>, <ol>, <nav>, <select> and <tr> children tags with a single command.",
+    "version": "1.0.0",
+    "description": "Format <ul>, <ol>, <nav>, <select> and <tr> children tags with a single command. NOW with advanced options.",
     "homepage": "http://caferati.me/labs/brackets-html-wrapper",
     "author": "rcaferati (https://github.com/rcaferati/)",
     "license": "MIT",
