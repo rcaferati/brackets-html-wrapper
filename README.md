@@ -23,6 +23,9 @@ HTML Wrapper is a Brackets Extension that formats &lt;ul&gt;, &lt;ol&gt;, &lt;na
 
 ## Changelog ##
 
+###1.0.1
+- Fixed indentation bug
+
 ###1.0.0
 - Added advanced options
 

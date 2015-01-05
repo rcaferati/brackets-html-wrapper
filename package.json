@@ -1,7 +1,7 @@
 {
     "name": "brackets-html-wrapper",
     "title": "HTML Wrapper",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Format <ul>, <ol>, <nav>, <select> and <tr> children tags with a single command. NOW with advanced options.",
     "homepage": "http://caferati.me/labs/brackets-html-wrapper",
     "author": "rcaferati (https://github.com/rcaferati/)",
@@ -14,7 +14,7 @@
         "list",
         "wrapper",
         "tag wrapper",
-        "speed typing"
+        "speedtyping"
     ],
     "files": [
         "main.js"
