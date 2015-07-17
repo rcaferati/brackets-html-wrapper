@@ -5,7 +5,7 @@ HTML Wrapper is a Brackets Extension that formats &lt;ul&gt;, &lt;ol&gt;, &lt;na
 
 ## Live demo
 
-[Access the live demo here.](https://caferati.me/demo/cssfier)
+[Access the live demo here.](https://caferati.me/demo/html-wrapper)
 
 ![html-wrapper demo](http://i.imgur.com/SZkTO7s.gif)
 
