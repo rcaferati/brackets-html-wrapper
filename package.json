@@ -3,7 +3,7 @@
     "title": "HTML Wrapper",
     "version": "1.1.0",
     "description": "Format <ul>, <ol>, <nav>, <select> and <tr> children tags with a single command. NOW with live demo.",
-    "homepage": "http://caferati.me/labs/brackets-html-wrapper",
+    "homepage": "https://caferati.me/labs/brackets-html-wrapper",
     "author": "rcaferati (https://github.com/rcaferati/)",
     "license": "MIT",
     "categories": "formatting",
