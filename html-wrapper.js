@@ -35,7 +35,7 @@ define(function (require, exports, module) {
 
 	function create(lines, tag, close) {
 		if (lines.length > 0) {
-			for (var i in lines) {
+			for (var i = 0; i < lines.length; i++) {
 				lines[i] = "<" + (tag.match(/^a\s?/i) ? replaceSlug(tag, lines[i]) : tag.match(/^option\s?/i) ? replaceValue(tag, lines[i]) : tag) + ">" + lines[i].trim() + "</" + close + ">";
 			}
 			return lines.join("\n");
@@ -46,21 +46,21 @@ define(function (require, exports, module) {
 		var str;
 		if (lines.length > 0 && tag.match(/^(select|option|nav|a)$/ig)) {
 			if (lines[0].match(/(.*)(value|href)(\=)(["']{2})(.*)/ig)) {
-				for (var i in lines) {
+				for (var i = 0; i < lines.length; i++) {
 					lines[i] = lines[i].replace(/(.*)(value|href)(\=)(["']{2})(.*)/ig, "$1$2$3'" + (tag.match(/^(nav|a)$/ig) ? "/" + setSlug(stripTags(lines[i])) : stripTags(lines[i])).trim() + "'$5");
 				}
 			} else {
 				switch (tag) {
 				case "select":
 				case "option":
-					for (var i in lines) {
+					for (var i = 0; i < lines.length; i++) {
 						str = lines[i].match(/(.*)(value)(\=)(["']{1})?([0-9]+)(["']{1})?(.*)/ig) ? "" : i;
 						lines[i] = lines[i].replace(/(.*)(value)(\=)(["']{1})?([^"']+)?(.*)/ig, "$1$2$3$4" + str + "$6");
 					}
 					break;
 				case "nav":
 				case "a":
-					for (var i in lines) {
+					for (var i = 0; i < lines.length; i++) {
 						lines[i] = lines[i].replace(/(.*)(value|href)(\=)(["']{1})?([^"'\s]+)?(.*)/ig, "$1$2$3$4$6");
 					}
 					break;
