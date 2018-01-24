@@ -42,5 +42,7 @@ HTML Wrapper is a Brackets Extension that formats &lt;ul&gt;, &lt;ol&gt;, &lt;na
 ###0.1.1
 - Added suport for &lt;tr&gt;
 
-###0.1.0
-- Initial release
+## Author
+#### Rafael Caferati
++ <a href="https://caferati.me/portfolio" title="Full-Stack Web Developer, UI/UX Javascript Specialist" target="_blank">Full-Stack Web Developer</a> @ <a title="Full-Stack Web Developer, UI/UX Javascript Specialist" href="https://caferati.me" target="_blank">caferati.me</a>
++ Checkout other open source projects at my <a title="Web Software Developer Code Laboratory" target="_blank" href="https://caferati.me/labs">Code Laboratory</a>
